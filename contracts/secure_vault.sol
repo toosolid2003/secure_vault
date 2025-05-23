@@ -19,13 +19,12 @@ contract SecureVault is Ownable, ReentrancyGuard {
     uint public deadline;
 
     // Constructor
-    constructor(address initialOwner) Ownable(initialOwner) {
-        initialOwner = msg.sender;
+    constructor(address initialOwner) Ownable(initialOwner) payable {
         deadline = block.timestamp + 10 days; // Set a deadline of 10 days from deployment
     }
     
     // Anyone can deposit ETH
-    function desposit() external payable {
+    function deposit() external payable {
         require(msg.value > 0, "Must contain ethers");
         require(msg.value <= 2 ether, "Deposit value too high");
 
