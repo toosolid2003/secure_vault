@@ -5,6 +5,7 @@ import {
 
 import { expect } from "chai";
 import hre, { ethers } from "hardhat";
+import { secureVaultSol } from "../typechain-types/contracts";
 
 describe("SecureVault", function()  {
   
@@ -68,52 +69,46 @@ describe("SecureVault", function()  {
   const storedHunter = await secure_vault.hunter();
   expect(storedHunter).to.equal(hre.ethers.ZeroAddress);
 });
+
+it("should only allow the owner to assign the hunter", async function() {
+  const { secure_vault, otherAccount, hunter } = await loadFixture(deployVault);
+
+  await expect(secure_vault.connect(otherAccount).assign_hunter(hunter)).to.be.reverted;
 })
 
-
-
-// // Test 2: only owner is allowed to assign hunter
-//   it("should allow anyone to deposit funds", async function() {
-//     const { secure_vault, otherAccount } = await loadFixture(deployVault);
-
-//     const depositAm = ethers.parseEther("1.0");
-//     // const tx = await secure_vault.connect(otherAccount).deposit;
-//     // await tx.wait();
-
-//     const balance = await secure_vault.checkBalance();
-//     expect(balance).to.equal(ethers.parseEther("2.0"));
-//   })
-
+it("should allow a user to claim a refund after the deadline", async function() {
+  const { secure_vault, otherAccount } = await loadFixture(deployVault);
+  const deadline = await secure_vault.checkDeadline();
+  const balance = ethers.provider.getBalance(otherAccount);
   
+  // Deposit some eth to become a contributor
+  await secure_vault.connect(otherAccount).deposit(ethers.parseEther("1.0"))
+  
+  // Increase time to reach the deadline
+  await time.increaseTo(deadline);
 
-// // Test 3: bounty can only be claimed before the deadline
-//   it("should return the balance of the contract", async function()  {
-//     const { secure_vault } = await loadFixture(deployVault);
-//     const balance = await secure_vault.checkBalance();
-//     expect(balance).to.equal(ethers.parseEther("1.0"));
-//   })
+  // Test the refund function
+  await expect(secure_vault.connect(otherAccount).refund()).to.changeEtherBalance(otherAccount, ethers.parseEther("1.0"));
+})
 
-// // Test 4: Refunds can only be done after the deadline
-//   it("should allow the owner to withdraw the funds", async function () {
-//     const { secure_vault, owner } = await loadFixture(deployVault);
-    
-//     // const tx = await secure_vault.connect(owner).withdraw();
-//     // const receipt = tx.wait();
+it("should not allow a user to claim a refund before the deadline", async function()  {
+  const { secure_vault, otherAccount } = await loadFixture(deployVault);
+  const deadline = await secure_vault.checkDeadline();
+  const balance = ethers.provider.getBalance(otherAccount);
+  const beforeDead = deadline - 1n;
+  
+  // Deposit some eth to become a contributor
+  await secure_vault.connect(otherAccount).deposit(ethers.parseEther("1.0"))
+  
+  // Increase time to reach the deadline
+  await time.increaseTo(beforeDead);
 
-//     const contractBalance = await secure_vault.checkBalance();
-//     expect(contractBalance).to.equal(0);
-//   })
+  await expect(secure_vault.connect(otherAccount).refund()).to.be.revertedWith("Deadline has not expired");
+})
 
-// // Test 5: it should allow multiple users to deposit funds
-// it("should allow multiple users to deposit funds", async function() {
-//   const [ user1, user2, user3 ] = await hre.ethers.getSigners();
-//   const  { secure_vault } = await loadFixture(deployVault);
+it("should not allow contriburtors to deposit more than 2 eth", async function()  {
+  const { secure_vault, otherAccount } = await loadFixture(deployVault);
 
-//   // const deposit1 = await secure_vault.connect(user1).deposit({ value: ethers.parseEther("0.5")});
-//   // const deposit2 = await secure_vault.connect(user2).deposit({ value: ethers.parseEther("0.5")});
-//   // const deposit3 = await secure_vault.connect(user3).deposit({ value: ethers.parseEther("0.5")});
-
-//   const contractBalance = await secure_vault.checkBalance();
-//   expect(contractBalance).to.equal(ethers.parseEther("2.5"));
-// })
-// 
+  await expect(secure_vault.deposit(ethers.parseEther("2.1"))).to.be.revertedWith("Deposit value too high");
+})
+})

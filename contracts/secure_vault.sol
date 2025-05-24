@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.28;
 
-// Uncomment this line to use console.log
-import "hardhat/console.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+
+
+// ------------------------------------------------------------------------------------------  //
+
 
 contract SecureVault is Ownable, ReentrancyGuard {
     
@@ -23,14 +25,14 @@ contract SecureVault is Ownable, ReentrancyGuard {
         deadline = block.timestamp + 10 days; // Set a deadline of 10 days from deployment
     }
     
-    // Anyone can deposit ETH
-    function deposit() external payable {
-        require(msg.value > 0, "Must contain ethers");
-        require(msg.value <= 2 ether, "Deposit value too high");
+    // Anyone can deposit ETH for the bounty
+    function deposit(uint _amount) external payable {
+        require(_amount > 0, "Must contain ethers");
+        require(_amount <= 2 ether, "Deposit value too high");
 
-        balances[msg.sender] += msg.value;
+        balances[msg.sender] += _amount;
 
-        emit Deposit(msg.sender, msg.value);
+        emit Deposit(msg.sender, _amount);
     }
     // Anyone can check their balance
     function checkBalance() public view returns (uint256) {
@@ -45,13 +47,13 @@ contract SecureVault is Ownable, ReentrancyGuard {
         return deadline;
     }
 
-    // Owner can assign a hunter who can claim the bounty
+    // Only owner can assign a hunter
     function assign_hunter(address _hunter) onlyOwner public {
         require(_hunter != address(0), "Invalid hunter address");
         hunter = _hunter;
     }
 
-    // The bounty must be claimed before a deadline
+    // The bounty must be claimed before a deadline by the hunter
     function claim_bounty() external nonReentrant {
         require(msg.sender == hunter, "Only the hunter can claim the bounty");
         require(block.timestamp < deadline, "Deadline has expired");
