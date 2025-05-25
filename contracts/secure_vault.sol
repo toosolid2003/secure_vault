@@ -26,13 +26,14 @@ contract SecureVault is Ownable, ReentrancyGuard {
     }
     
     // Anyone can deposit ETH for the bounty
-    function deposit(uint _amount) external payable {
-        require(_amount > 0, "Must contain ethers");
-        require(_amount <= 2 ether, "Deposit value too high");
+    function deposit() external payable {
+        require(msg.value > 0, "Must contain ethers");
+        require(msg.value <= 2 ether, "Deposit value too high");
+        require(block.timestamp < deadline, "Deposit not allowed after the deadline");
 
-        balances[msg.sender] += _amount;
+        balances[msg.sender] += msg.value;
 
-        emit Deposit(msg.sender, _amount);
+        emit Deposit(msg.sender, msg.value);
     }
     // Anyone can check their balance
     function checkBalance() public view returns (uint256) {
@@ -62,7 +63,7 @@ contract SecureVault is Ownable, ReentrancyGuard {
         (bool success,) = payable(hunter).call{value: contractBalance}("");
         require(success, "Bounty claimed failed");
 
-        emit Deposit(hunter, contractBalance);
+        emit Claimed(hunter, contractBalance);
 
         // Reset the hunter address to prevent double claiming
         hunter = address(0);
@@ -82,4 +83,6 @@ contract SecureVault is Ownable, ReentrancyGuard {
 
         emit Refund(msg.sender, amountToRefund);
     }
+     receive() external payable {}
+     fallback() external payable {}
 }
