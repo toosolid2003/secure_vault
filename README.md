@@ -1,6 +1,7 @@
 # 🔐 Secure Bounty Vault
 
-A minimal and secure smart contract to manage bounty campaigns with refundable deposits and deadline-based payout logic — part of my journey to becoming a senior Solidity developer.
+A minimal and secure smart contract to manage bounty campaigns with refundable deposits and deadline-based payout logic — 
+built with composability in mind.
 
 ## 📌 Summary
 
@@ -46,18 +47,19 @@ The contract is built with key security and design patterns including:
 /contracts
   SecureVault.sol      # Main contract
 /test
-  secureVault.test.js  # (coming soon)
+  secure_vault.ts  # Test suite
 scripts/
   deploy.js            # Deployment script
 README.md              # This file
 
+```
 ---
 
 ## 🔒 Security Considerations
 
 - ✔️ Reentrancy protected via `nonReentrant`
 - ✔️ Funds cannot be claimed twice
-- ✔️ ETH transfers happen after state changes
+- ✔️ ETH transfers happen after state changes (check-effects-interaction pattern)
 - ✔️ Invalid hunter addresses are rejected
 - ❗ Max deposit per user capped (2 ETH)
 
@@ -70,17 +72,14 @@ Manual internal audit shows:
 - No reentrancy risks
 - Proper access control
 - Gas usage is acceptable
-- Minor recommendation: remove unused `_amount` param in `deposit()`
-- Fixed: incorrect event in `claim_bounty()` replaced with `Claimed()`
 
-✅ **Status**: Secure with minor improvements
+✅ **Status**: Secure 
 
 
 ## 🌍 Coming Soon
 
 - 🌐 Full-stack dApp using Next.js, wagmi, and TailwindCSS
-- 🧪 Complete test suite with Foundry or Hardhat
-- 🧾 Contract verification and frontend deployment
+- 🧾 Full contract verification and frontend deployment
 
 ---
 
