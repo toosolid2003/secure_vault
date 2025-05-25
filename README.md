@@ -89,7 +89,7 @@ If you're hiring or collaborating on Solidity projects:
 
 - **Email**: thibaut[at]segura.design
 - **GitHub**: [@toosolid2003](https://github.com/toosolid2003)  
-- **Blog**: [designiconoclast.substack.com](https://designiconoclast.substack.com
+- **Blog**: [designiconoclast.substack.com](https://designiconoclast.substack.com)
 
 ---
 
