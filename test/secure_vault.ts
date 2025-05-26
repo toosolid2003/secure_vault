@@ -82,7 +82,8 @@ it("should allow a user to claim a refund after the deadline", async function() 
   const balance = ethers.provider.getBalance(otherAccount);
   
   // Deposit some eth to become a contributor
-  await secure_vault.connect(otherAccount).deposit(ethers.parseEther("1.0"))
+  const depo = await ethers.parseEther("1.0");
+  await secure_vault.connect(otherAccount).deposit({value: depo});
   
   // Increase time to reach the deadline
   await time.increaseTo(deadline);
@@ -98,7 +99,8 @@ it("should not allow a user to claim a refund before the deadline", async functi
   const beforeDead = deadline - 1n;
   
   // Deposit some eth to become a contributor
-  await secure_vault.connect(otherAccount).deposit(ethers.parseEther("1.0"))
+  const depo = await ethers.parseEther("1.0");
+  await secure_vault.connect(otherAccount).deposit({value: depo});
   
   // Increase time to reach the deadline
   await time.increaseTo(beforeDead);
@@ -108,7 +110,9 @@ it("should not allow a user to claim a refund before the deadline", async functi
 
 it("should not allow contriburtors to deposit more than 2 eth", async function()  {
   const { secure_vault, otherAccount } = await loadFixture(deployVault);
+  
+  const depo = await ethers.parseEther("2.1");
 
-  await expect(secure_vault.deposit(ethers.parseEther("2.1"))).to.be.revertedWith("Deposit value too high");
+  await expect(secure_vault.deposit({value: depo})).to.be.revertedWith("Deposit value too high");
 })
 })
