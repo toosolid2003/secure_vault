@@ -115,4 +115,24 @@ it("should not allow contriburtors to deposit more than 2 eth", async function()
 
   await expect(secure_vault.deposit({value: depo})).to.be.revertedWith("Deposit value too high");
 })
+it("should emit a claimed event", async function(){
+  const { secure_vault, owner, hunter, lockedAmount } = await loadFixture(deployVault);
+
+  // Assign the hunter
+  await secure_vault.connect(owner).assign_hunter(hunter);
+
+  // Claim the bounty
+  const tx = await secure_vault.connect(hunter).claim_bounty();
+  const receipt = await tx.wait();
+  expect(receipt).to.emit(secure_vault, "Claimed").withArgs(hunter.address, ethers.provider.getBalance(secure_vault));
+
+})
+it("should emit a Deposit event", async function()  {
+  const {secure_vault, otherAccount} = await loadFixture(deployVault);
+
+  const depo = ethers.parseEther("1.0");
+  const tx = await secure_vault.connect(otherAccount).deposit({value: depo});
+  const receipt = await tx.wait();
+  expect(receipt).to.emit(secure_vault, "Deposit").withArgs(otherAccount.address, depo);
+})
 })
