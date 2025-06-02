@@ -3,6 +3,9 @@ import { BrowserProvider, Contract } from "ethers";
 import './App.css'
 import SecureVault from '../../artifacts/contracts/secure_vault.sol/SecureVault.json';
 import AssignHunterForm from './components/assignHunter';
+import DepositFundsForm from './components/depositFunds';
+import ClaimBountyForm from './components/claimBounty';
+import RefundForm from './components/refund';
 
 
 export const abi = SecureVault.abi;
@@ -59,6 +62,17 @@ function App() {
           <p>Response: {message}</p>
         </div>
         {contract && <AssignHunterForm contract={contract} />}
+        </div>
+
+        <div>
+          {contract && <DepositFundsForm contract={contract} />}
+        </div>
+
+        <div>
+          {contract && <ClaimBountyForm contract={contract} /> }
+        </div>
+        <div>
+          {contract && <RefundForm contract={contract} /> }
         </div>
     </div>
 
