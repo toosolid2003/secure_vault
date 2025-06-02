@@ -20,11 +20,17 @@ function DepositFundsForm({contract}) {
             settxStatus("Sending transaction...");
             const tx = await contract.deposit( {value: ethers.parseEther(amount) });
             await tx.wait();
-            settxStatus("Transaction complete!");
+            settxStatus("Your deposit has been successful!");
         }
         catch (err) {
             console.log(err);
-            settxStatus("Transaction incomplete.");
+            if(err.reason)  {
+                settxStatus(`We ran into a little issue: ${err.reason}.\nMake sure you deposit less than 2 ETH.`);
+            }
+            else{
+                settxStatus("Transaction incomplete.");
+            }
+            
 
         }
     };

@@ -43,11 +43,6 @@ function App() {
     setMessage(value.toString());
   }
 
-  const assignHunter = async () => {
-    if (!contract) return alert("Contract not connected");
-    const value = await contract.checkBalance();
-    setMessage(value.toString());
-  }
 
   return (
     <div>

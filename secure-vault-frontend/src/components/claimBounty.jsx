@@ -8,6 +8,7 @@ function ClaimBountyForm({contract})    {
     
 
     const handleSubmit = async(e) => {
+        e.preventDefault();
         if(!contract)   {
             alert("Contract not connected");
             settxStatus("Contract not connected");
@@ -21,13 +22,20 @@ function ClaimBountyForm({contract})    {
         }
         catch (err) {
             console.log(err)
-            settxStatus("Error: check the browser console for details");
+            if(err.reason)  {
+                settxStatus(`We ran into an issue: ${err.reason}`);
+            }
+            else {
+                settxStatus("Error: check the browser console for details");
+            }
+
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <button type="submit">Claim</button>
+            <p>{txstatus}</p>
         </form>
     )
 };
