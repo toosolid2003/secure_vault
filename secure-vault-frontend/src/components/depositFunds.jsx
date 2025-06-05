@@ -36,20 +36,25 @@ function DepositFundsForm({contract}) {
     };
 
     return(
-        <form onSubmit={handleSubmit}>
-            <input
-            type="text"
-            placeholder="enter amount of ETH to deposit in the vault"
-            value={amount}
-            onChange={handleChange}
-            />
+        <div className="card">
+            <h2>Contribute</h2>
+            <p>Deposit ETH in this secure vault to contribute to the prize</p>
+            <form onSubmit={handleSubmit}>
+                <input
+                type="text"
+                placeholder="enter amount" 
+                value={amount}
+                onChange={handleChange}
+                />
 
-            <button type="submit">
-                Deposit
-            </button>
+                <button type="submit">
+                    Deposit
+                </button>
 
-            <p>{txstatus}</p>
-        </form>
+                <p>{txstatus}</p>
+            </form>        
+        </div>
+
     );
 
 }
