@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './cards.css';
 
 function AssignHunterForm( {contract}) {
     const [hunter, setHunter] = useState("");
@@ -29,20 +30,24 @@ function AssignHunterForm( {contract}) {
     };
 
     return  (
-        <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: "1em auto" }}>
-            <label htmlFor="hunter">Hunter Address:</label><br />
-            <input
-                type="text"
-                id="hunter"
-                value={hunter}
-                onChange={handleChange}
-                placeholder='0x......'
-                style={{ width: "100%", padding: "0.5em", marginTop: "0.5em" }}
-                />
-                <br/><br/>
-                <button type="submit">Assign Hunter</button>
-                <p>{txStatus}</p>
-        </form>
+        <div className='card'>
+            <h2>Assign Hunter</h2>
+            <p>Specify the wallet address of the prize winner of this challenge below.</p>
+            <form onSubmit={handleSubmit} className='secure-form'>
+                <input
+                    type="text"
+                    id="hunter"
+                    value={hunter}
+                    onChange={handleChange}
+                    placeholder='0x......'
+                    style={{ width: "100%", padding: "0.5em", marginTop: "0.5em" }}
+                    />
+                    <br/><br/>
+                    <button type="submit">Assign Hunter</button>
+            </form>
+        </div>
+
+
     );
 }
 

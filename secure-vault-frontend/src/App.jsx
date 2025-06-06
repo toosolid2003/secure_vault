@@ -8,7 +8,25 @@ import ClaimBountyForm from './components/claimBounty';
 import RefundForm from './components/refund';
 import GetDeadline from './components/getDeadline';
 
-// TODO: include the Rainbowkit connect button
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultConfig,RainbowKitProvider} from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import {mainnet,  sepolia} from 'wagmi/chains';
+import {QueryClientProvider,  QueryClient} from "@tanstack/react-query";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+
+// Rainbowkit button
+
+const rainbowConfig = getDefaultConfig({
+  appName: 'Secure Vault',
+  projectId: 'f99798e321897c5c286878a8180fc3a8',
+  chains: [mainnet, sepolia],
+  ssr: false, // If your dApp uses server side rendering (SSR)
+});
+
+const queryclient = new QueryClient();
+
 
 export const abi = SecureVault.abi;
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -66,7 +84,7 @@ function App() {
 
   // Helper functions
   const isOwner = walletAddress && owner && walletAddress.toLowerCase() === owner;
-  const isHuner = walletAddress && hunter && walletAddress.toLowerCase() === hunter;
+  const isHunter = walletAddress && hunter && walletAddress.toLowerCase() === hunter;
 
   // Card rendering logic
   const renderCards = () => {
@@ -75,6 +93,7 @@ function App() {
         <>
           <DepositFundsForm contract={contract} />
           <AssignHunterForm contract={contract} />
+          <RefundForm contract={contract} />
         </>
       );
     } else if (isHunter)  {
@@ -86,21 +105,26 @@ function App() {
       );
     } else{
       return(
-        <DepositFundsForm contract={contract} />
+        <>
+          <DepositFundsForm contract={contract} />
+          <RefundForm contract={contract} />        
+        </>
+
       );
     }
   };
 
   return (
-
-    <>
-      <div className="top-menu">
-
-      </div>
-      <div className="title-box">
-         <h4>The challenge</h4>
-         <h1>Cross-Site Scripting (XSS) Vulnerability in User Profile Page</h1>
-      </div>
+    <WagmiProvider config={rainbowConfig}>
+        <QueryClientProvider client={queryclient}>
+          <RainbowKitProvider>
+          <div className="top-menu">
+            <ConnectButton>Connect wallet</ConnectButton>
+          </div>
+          <div className="title-box">
+             <h4>The challenge</h4>
+            <h1>Cross-Site Scripting (XSS) Vulnerability in User Profile Page</h1>
+          </div>
 
       <div className="main">
 
@@ -122,19 +146,14 @@ function App() {
                   </p>
               </div>
               <div className="card-box">
-                {!walletAddress ? (
-                  <p>Connect Wallet</p>
-                ) : ( 
-                  renderCards()
-                )}
-               
+                  {renderCards()}
               </div>
           </div>
 
       </div>
-    
-    </>
-
+          </RainbowKitProvider>
+        </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 

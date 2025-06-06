@@ -39,7 +39,7 @@ function DepositFundsForm({contract}) {
         <div className="card">
             <h2>Contribute</h2>
             <p>Deposit ETH in this secure vault to contribute to the prize</p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="secure-form">
                 <input
                 type="text"
                 placeholder="enter amount" 

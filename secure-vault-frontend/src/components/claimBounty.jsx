@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './cards.css';
 
 
 
@@ -33,10 +34,15 @@ function ClaimBountyForm({contract})    {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <button type="submit">Claim</button>
-            <p>{txstatus}</p>
-        </form>
+        <div className="card">
+            <h2>Claim your bounty!</h2>
+            <p>Congrats, you've been rewarded with the bounty. Claim it here!</p>
+            <form onSubmit={handleSubmit} className="secure-form">
+                <button type="submit">Claim</button>
+                <p>{txstatus}</p>
+            </form>
+        </div>
+
     )
 };
 

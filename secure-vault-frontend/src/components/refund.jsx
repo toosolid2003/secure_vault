@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './cards.css';
 
 
 
@@ -31,11 +32,15 @@ function RefundForm({contract})    {
     };
 
     return (
-        
-        <form onSubmit={handleSubmit}>
-            <button type="submit">Ask refund</button>
-            <p>{txstatus}</p>
-        </form>
+        <div className="card">
+                <h2>Refund</h2>
+                <p>You can ask for a refund before the deadline expires. Fees are on you.</p>
+            <form onSubmit={handleSubmit} className="secure-form">
+                <button type="submit">Ask refund</button>
+                <p>{txstatus}</p>
+            </form>
+        </div>
+
     )
 };
 
