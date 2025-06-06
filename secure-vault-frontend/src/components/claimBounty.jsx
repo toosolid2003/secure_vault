@@ -36,11 +36,11 @@ function ClaimBountyForm({contract})    {
     return (
         <div className="card">
             <h2>Claim your bounty!</h2>
-            <p>Congrats, you've been rewarded with the bounty. Claim it here!</p>
+            <p>Congrats, you have been rewarded with the bounty. Claim it here!</p>
             <form onSubmit={handleSubmit} className="secure-form">
-                <button type="submit">Claim</button>
-                <p>{txstatus}</p>
             </form>
+
+                <button type="submit">Claim</button>
         </div>
 
     )

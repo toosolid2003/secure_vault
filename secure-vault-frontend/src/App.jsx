@@ -43,7 +43,7 @@ function App() {
       if(!window.ethereum) return alert("Install MetaMask");
 
       const address = await window.ethereum.request({ method: "eth_requestAccounts"});
-      setWalletAddress(address);
+      setWalletAddress(address[0]);
 
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -83,8 +83,10 @@ function App() {
   }, [contract]);
 
   // Helper functions
-  const isOwner = walletAddress && owner && walletAddress.toLowerCase() === owner;
-  const isHunter = walletAddress && hunter && walletAddress.toLowerCase() === hunter;
+  const isOwner = walletAddress && owner && walletAddress.toLowerCase() === owner.toLowerCase();
+  console.log("isOwner:" , {isOwner});
+  const isHunter = walletAddress && hunter && walletAddress.toLowerCase() === hunter.toLowerCase();
+  console.log("isHunter:", {isHunter});
 
   // Card rendering logic
   const renderCards = () => {
@@ -104,15 +106,16 @@ function App() {
       </>
       );
     } else{
-      return(
+      console.log("no hunter or owner");
+        return(
         <>
           <DepositFundsForm contract={contract} />
           <RefundForm contract={contract} />        
         </>
-
-      );
-    }
+    
+  )}
   };
+
 
   return (
     // <WagmiProvider config={rainbowConfig}>
@@ -128,7 +131,7 @@ function App() {
           <div className="title-box">
              <h4>The challenge</h4>
             <h1>Cross-Site Scripting (XSS) Vulnerability in User Profile Page</h1>
-            <GetDeadline />
+            <GetDeadline contract={contract}/>
           </div>
 
       <div className="main">

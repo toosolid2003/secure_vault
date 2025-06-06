@@ -48,11 +48,11 @@ function DepositFundsForm({contract}) {
                 />
 
                 <button type="submit">
-                    Deposit
-                </button>
+                 Deposit
+                 </button>
 
-                <p>{txstatus}</p>
             </form>        
+
         </div>
 
     );

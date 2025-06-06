@@ -37,7 +37,6 @@ function RefundForm({contract})    {
                 <p>You can ask for a refund before the deadline expires. Fees are on you.</p>
             <form onSubmit={handleSubmit} className="secure-form">
                 <button type="submit">Ask refund</button>
-                <p>{txstatus}</p>
             </form>
         </div>
 
