@@ -8,24 +8,24 @@ import ClaimBountyForm from './components/claimBounty';
 import RefundForm from './components/refund';
 import GetDeadline from './components/getDeadline';
 
-// import '@rainbow-me/rainbowkit/styles.css';
-// import { getDefaultConfig,RainbowKitProvider} from '@rainbow-me/rainbowkit';
-// import { WagmiProvider } from 'wagmi';
-// import {mainnet,  sepolia} from 'wagmi/chains';
-// import {QueryClientProvider,  QueryClient} from "@tanstack/react-query";
-// import { ConnectButton } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultConfig,RainbowKitProvider} from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import {mainnet,  sepolia} from 'wagmi/chains';
+import {QueryClientProvider,  QueryClient} from "@tanstack/react-query";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 
 // Rainbowkit button
 
-// const rainbowConfig = getDefaultConfig({
-//   appName: 'Secure Vault',
-//   projectId: 'f99798e321897c5c286878a8180fc3a8',
-//   chains: [mainnet, sepolia],
-//   ssr: false, // If your dApp uses server side rendering (SSR)
-// });
+const rainbowConfig = getDefaultConfig({
+  appName: 'Secure Vault',
+  projectId: 'f99798e321897c5c286878a8180fc3a8',
+  chains: [mainnet, sepolia],
+  ssr: false, // If your dApp uses server side rendering (SSR)
+});
 
-// const queryclient = new QueryClient();
+const queryclient = new QueryClient();
 
 
 export const abi = SecureVault.abi;
@@ -118,10 +118,10 @@ function App() {
 
 
   return (
-    // <WagmiProvider config={rainbowConfig}>
-    //     <QueryClientProvider client={queryclient}>
-    //       <RainbowKitProvider>
-        <>
+    <WagmiProvider config={rainbowConfig}>
+        <QueryClientProvider client={queryclient}>
+          <RainbowKitProvider>
+        
           <div className="top-menu">
             {/* <ConnectButton>Connect wallet</ConnectButton> */}
             {!walletAddress ? (
@@ -160,11 +160,10 @@ function App() {
 
       </div>        
         
-        </>
 
-    //       </RainbowKitProvider>
-    //     </QueryClientProvider>
-    // </WagmiProvider>
+          </RainbowKitProvider>
+        </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 
