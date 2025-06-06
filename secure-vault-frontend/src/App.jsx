@@ -124,6 +124,7 @@ function App() {
           <div className="title-box">
              <h4>The challenge</h4>
             <h1>Cross-Site Scripting (XSS) Vulnerability in User Profile Page</h1>
+            <GetDeadline />
           </div>
 
       <div className="main">

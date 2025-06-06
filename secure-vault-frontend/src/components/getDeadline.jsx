@@ -13,7 +13,7 @@ function GetDeadline( {contract} )  {
     }, [contract]   );
   return (
     <div>
-      <p>Deadline: {deadline || 'Loading...'}</p>
+      <h4>Deadline: {deadline || 'Loading...'}</h4>
     </div>
   );
 }
