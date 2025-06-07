@@ -1,5 +1,6 @@
 import { useState, useEffect  } from 'react';
 import { BrowserProvider, Contract } from "ethers";
+import { ethers } from "ethers";
 import './App.css'
 import SecureVault from '../../artifacts/contracts/secure_vault.sol/SecureVault.json';
 import AssignHunterForm from './components/assignHunter';
@@ -7,29 +8,12 @@ import DepositFundsForm from './components/depositFunds';
 import ClaimBountyForm from './components/claimBounty';
 import RefundForm from './components/refund';
 import GetDeadline from './components/getDeadline';
-
-import '@rainbow-me/rainbowkit/styles.css';
-import { getDefaultConfig,RainbowKitProvider} from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
-import {mainnet,  sepolia} from 'wagmi/chains';
-import {QueryClientProvider,  QueryClient} from "@tanstack/react-query";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-
-
-// Rainbowkit button
-
-const rainbowConfig = getDefaultConfig({
-  appName: 'Secure Vault',
-  projectId: 'f99798e321897c5c286878a8180fc3a8',
-  chains: [mainnet, sepolia],
-  ssr: false, // If your dApp uses server side rendering (SSR)
-});
-
-const queryclient = new QueryClient();
+import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
 
 
 export const abi = SecureVault.abi;
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const contractAddress = "0x855b3d7cD376b2FBF1AE0e69B1D11Ec4f989E302"; // on Sepolia
 
 function App() {
   const [walletAddress, setWalletAddress] = useState(null);
@@ -38,39 +22,40 @@ function App() {
   const [hunter, setHunter] = useState(null);
   const [owner, setOwner] = useState(null);
 
-  const connectWallet = async () => {
-    try{
-      if(!window.ethereum) return alert("Install MetaMask");
+  const { address, isConnected } = useAccount();
+  const { data: walletClient } = useWalletClient(); // signer-like object
+  // const publicClient = usePublicClient(); // for read-only
 
-      const address = await window.ethereum.request({ method: "eth_requestAccounts"});
-      setWalletAddress(address[0]);
 
-      const provider = new BrowserProvider(window.ethereum);
+  useEffect(()  => {
+    const setupContract = async () => {
+      if (!window.ethereum || !isConnected) return;
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contractInstance = new Contract(contractAddress, SecureVault.abi, signer);
-      console.log("Contract connected:", contractInstance);
-      console.log("Signer:", signer);
+      const contractInstance = new ethers.Contract(contractAddress, SecureVault.abi, signer);
 
       setContract(contractInstance);
+      setWalletAddress(address);
 
-      // Fetching owner and hunter addresses
-      const ownerAddress = await contractInstance.owner();
-      setOwner(ownerAddress);
-   
+      try{
+        const ownerAddress = await contractInstance.owner();
+        setOwner(ownerAddress);
+      } catch (e) {
+        console.error("Unable to get the owner's address: ",e);
+      }
+
       try{
         const hunterAddress = await contractInstance.hunter();
         setHunter(hunterAddress);
       } catch(e)  {
-        setHunter(null);
+        setHunter(null);  // TODO: function to display something when the hunter is not assigned yet
       }
-    }
-    catch (err) {
-      console.error("Wallet connection failed:", err);
-    }
+    };
+    setupContract();
+  } , [address, isConnected]);
 
 
-
-  }
   const readContract = async () => {
     if (!contract) return alert("Contract not connected");
     const value = await contract.checkBalance();
@@ -118,16 +103,12 @@ function App() {
 
 
   return (
-    <WagmiProvider config={rainbowConfig}>
-        <QueryClientProvider client={queryclient}>
-          <RainbowKitProvider>
+
+      <>
+      <div className="top-menu">
+        <ConnectButton />
         
-          <div className="top-menu">
-            {/* <ConnectButton>Connect wallet</ConnectButton> */}
-            {!walletAddress ? (
-              <button onClick={connectWallet}>Connect wallet</button>
-            ): ( <p>Connected</p>)}
-          </div>
+      </div>
           <div className="title-box">
              <h4>The challenge</h4>
             <h1>Cross-Site Scripting (XSS) Vulnerability in User Profile Page</h1>
@@ -159,11 +140,11 @@ function App() {
           </div>
 
       </div>        
+      
+      </>  
+ 
         
 
-          </RainbowKitProvider>
-        </QueryClientProvider>
-    </WagmiProvider>
   );
 }
 
