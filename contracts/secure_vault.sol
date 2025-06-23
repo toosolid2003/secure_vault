@@ -22,7 +22,7 @@ contract SecureVault is Ownable, ReentrancyGuard {
 
     // Constructor
     constructor(address initialOwner) Ownable(initialOwner) payable {
-        deadline = block.timestamp + 10 days; // Set a deadline of 10 days from deployment
+        deadline = block.timestamp + 90 days; // Set a deadline of 90 days from deployment
     }
     
     // Anyone can deposit ETH for the bounty
