@@ -4,7 +4,7 @@ A minimal and secure smart contract to manage bounty campaigns with refundable d
 built with composability in mind.
 
 ## Demo
-**Loom Demo**(https://www.loom.com/share/c358a16d411b468ea7b156a7752aabf8?sid=b7b82c55-38b4-41a2-9c3c-a357d9fde222)
+[Loom Walkthrough](https://www.loom.com/share/c358a16d411b468ea7b156a7752aabf8?sid=b7b82c55-38b4-41a2-9c3c-a357d9fde222)
 
 ## 📌 Summary
 
