@@ -45,7 +45,11 @@ contract SecureVault is Ownable, ReentrancyGuard {
     }
     // Anyone can check the deadline
     function checkDeadline() public view returns (uint256) {
-        return deadline;
+        uint256 d = deadline;
+        if(deadline < block.timestamp)  {
+            d = 0; // We return 0 if the deadline is expired
+        }
+        return d;
     }
 
     // Only owner can assign a hunter

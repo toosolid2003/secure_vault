@@ -92,6 +92,22 @@ it("should allow a user to claim a refund after the deadline", async function() 
   await expect(secure_vault.connect(otherAccount).refund()).to.changeEtherBalance(otherAccount, ethers.parseEther("1.0"));
 })
 
+
+it("should return 0 when the deadline has expired", async function() {
+  const { secure_vault, otherAccount } = await loadFixture(deployVault);
+  const deadline = await secure_vault.checkDeadline();
+  
+  // Increase time to reach the deadline
+  await time.increaseTo(deadline + 1n);
+
+  // the checkDeadline function should return 0
+  const tx = await secure_vault.connect(otherAccount).checkDeadline();
+  const newDeadline = await secure_vault.checkDeadline();
+
+  expect(newDeadline).to.equal(0);
+  })
+
+
 it("should not allow a user to claim a refund before the deadline", async function()  {
   const { secure_vault, otherAccount } = await loadFixture(deployVault);
   const deadline = await secure_vault.checkDeadline();
@@ -108,6 +124,7 @@ it("should not allow a user to claim a refund before the deadline", async functi
   await expect(secure_vault.connect(otherAccount).refund()).to.be.revertedWith("Deadline has not expired");
 })
 
+
 it("should not allow contriburtors to deposit more than 2 eth", async function()  {
   const { secure_vault, otherAccount } = await loadFixture(deployVault);
   
@@ -115,6 +132,7 @@ it("should not allow contriburtors to deposit more than 2 eth", async function()
 
   await expect(secure_vault.deposit({value: depo})).to.be.revertedWith("Deposit value too high");
 })
+
 it("should emit a claimed event", async function(){
   const { secure_vault, owner, hunter, lockedAmount } = await loadFixture(deployVault);
 
