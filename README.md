@@ -3,6 +3,9 @@
 A minimal and secure smart contract to manage bounty campaigns with refundable deposits and deadline-based payout logic — 
 built with composability in mind.
 
+## Demo
+**Loom Demo**(https://www.loom.com/share/c358a16d411b468ea7b156a7752aabf8?sid=b7b82c55-38b4-41a2-9c3c-a357d9fde222)
+
 ## 📌 Summary
 
 This contract enables contributors to fund a bounty pool in ETH. The owner can assign a "hunter" who is eligible to claim the full bounty if they meet a deadline. If no claim is made by the deadline, contributors can refund their deposits. 
@@ -75,11 +78,6 @@ Manual internal audit shows:
 
 ✅ **Status**: Secure 
 
-
-## 🌍 Coming Soon
-
-- 🌐 Full-stack dApp using Next.js, wagmi, and TailwindCSS
-- 🧾 Full contract verification and frontend deployment
 
 ---
 
